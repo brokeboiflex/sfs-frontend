@@ -6,13 +6,29 @@ import { formatDate, formatFileSize, type DriveItem } from "./types"
 
 type FileGridProps = {
   items: DriveItem[]
+  onFolderOpen?: (path: string) => void
 }
 
-export function FileGrid({ items }: FileGridProps) {
+export function FileGrid({ items, onFolderOpen }: FileGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((item) => (
-        <Card key={item.id} className="hover:border-primary/60 transition">
+        <Card
+          key={item.id}
+          className="hover:border-primary/60 transition"
+          role={item.type === "folder" && onFolderOpen ? "button" : undefined}
+          tabIndex={item.type === "folder" && onFolderOpen ? 0 : -1}
+          onClick={() => {
+            if (item.type === "folder" && onFolderOpen) {
+              onFolderOpen(item.path)
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && item.type === "folder" && onFolderOpen) {
+              onFolderOpen(item.path)
+            }
+          }}
+        >
           <CardHeader className="flex flex-row items-start justify-between space-y-0">
             <div className="flex items-center gap-2">
               {item.type === "folder" ? (
