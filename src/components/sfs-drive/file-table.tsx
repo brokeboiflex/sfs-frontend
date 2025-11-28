@@ -5,9 +5,10 @@ import { formatDate, formatFileSize, type DriveItem } from "./types"
 
 type FileTableProps = {
   items: DriveItem[]
+  onFolderOpen?: (path: string) => void
 }
 
-export function FileTable({ items }: FileTableProps) {
+export function FileTable({ items, onFolderOpen }: FileTableProps) {
   return (
     <Table>
       <TableCaption>Your latest files and folders</TableCaption>
@@ -21,7 +22,15 @@ export function FileTable({ items }: FileTableProps) {
       </TableHeader>
       <TableBody>
         {items.map((item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={item.type === "folder" && onFolderOpen ? "cursor-pointer" : undefined}
+            onClick={() => {
+              if (item.type === "folder" && onFolderOpen) {
+                onFolderOpen(item.path)
+              }
+            }}
+          >
             <TableCell className="font-medium">
               <span className="flex items-center gap-2">
                 {item.type === "folder" ? (

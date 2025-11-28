@@ -1,10 +1,29 @@
+export type SfsFile = {
+  id: string
+  name: string
+  extension: string
+  hash: string
+  size: number
+  type: "file"
+  last_modified: number
+  path: string
+  [key: string]: any
+}
+
+export type SfsFolder = {
+  path: string
+  last_modified: number
+}
+
 export type DriveItem = {
   id: string
   name: string
   type: "file" | "folder"
   size: number
-  updatedAt: string
+  updatedAt: string | number
   owner: string
+  path: string
+  extension?: string
 }
 
 export function formatFileSize(bytes: number) {
@@ -15,7 +34,7 @@ export function formatFileSize(bytes: number) {
   return `${size.toFixed(size >= 10 || exponent === 0 ? 0 : 1)} ${units[exponent]}`
 }
 
-export function formatDate(date: string) {
+export function formatDate(date: string | number) {
   const formatter = new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
